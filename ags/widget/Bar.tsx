@@ -110,16 +110,21 @@ function Workspaces() {
     buttons.set(i, btn)
   }
 
+  let updateTimeout: ReturnType<typeof setTimeout> | null = null
+
   const update = () => {
-    const active = hypr.get_focused_workspace()?.id
-    buttons.forEach((btn, id) => {
-      const occupied = hypr.get_workspaces().some(ws => ws.id === id)
-      btn.cssClasses = id === active
-        ? ["ws-btn", "active"]
-        : occupied
-        ? ["ws-btn", "occupied"]
-        : ["ws-btn"]
-    })
+    if (updateTimeout) clearTimeout(updateTimeout)
+    updateTimeout = setTimeout(() => {
+      const active = hypr.get_focused_workspace()?.id
+      buttons.forEach((btn, id) => {
+        const occupied = hypr.get_workspaces().some(ws => ws.id === id)
+        btn.cssClasses = id === active
+          ? ["ws-btn", "active"]
+          : occupied
+          ? ["ws-btn", "occupied"]
+          : ["ws-btn"]
+      })
+    }, 50)  // 50ms debounce
   }
 
   // dynamically update per hyprland.conf update
@@ -216,6 +221,8 @@ function Volume() {
   let speakerConnection: number | null = null
   let prevSpeaker: any | null = null
 
+  let muteConnection: number | null = null  // add this
+
   const bindSpeaker = () => {
     const speaker = audio.default_speaker
     if (!speaker) return
@@ -225,16 +232,19 @@ function Volume() {
       speakerConnection = null
     }
 
-    prevSpeaker = speaker
+    if (muteConnection !== null && prevSpeaker !== null) {  // add this block
+      prevSpeaker.disconnect(muteConnection)
+      muteConnection = null
+    }
 
+    prevSpeaker = speaker
     const update = () => {
       label.label = `${getVolumeIcon(speaker.volume)} ${Math.round(speaker.volume * 100)}%`
     }
 
     update()
-
     speakerConnection = speaker.connect("notify::volume", update)
-    speaker.connect("notify::mute", update)
+    muteConnection = speaker.connect("notify::mute", update)  // and save this one too
   }
 
   audio.connect("notify::default-speaker", bindSpeaker)
