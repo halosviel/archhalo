@@ -11,6 +11,7 @@ import { bind } from "ags/binding"
 import Hyprland from "gi://AstalHyprland"
 import GdkPixbuf from "gi://GdkPixbuf"
 import Cava from "gi://AstalCava"
+import GLib from "gi://GLib"
 import Wp from "gi://AstalWp"
 
 
@@ -288,42 +289,61 @@ function Weather() {
 }
 
 function CpuTemperature() {
-  const temp = createPoll("", CPU_TEMP_UPDATE_INTERVAL, "bash -c 'awk \"{printf \\\"%.1f\\\", \\$1/1000}\" $(grep -rl Tctl /sys/class/hwmon/hwmon*/temp*_label | sed s/temp.*_label/temp1_input/)'")
-  
-  const getIcon = (t: string) => {
-    const num = parseFloat(t)
-    if (isNaN(num)) return ""
-    if (num < 50) return ""
-    if (num < 75) return ""
-    if (num < 100) return ""
+  const TEMP_PATH = "/sys/class/hwmon/hwmon1/temp1_input"
 
-    return ""
+  const getIcon = (num: number) => {
+    if (isNaN(num)) return ""
+    if (num < 50) return ""
+    if (num < 75) return ""
+    if (num < 100) return ""
+    return ""
   }
 
-  return (
-    <label
-      label={temp((t: string) => `${getIcon(t)} CPU ${t}°C`)}
-      class="temperature"
-    />
-  )
+  const label = new Gtk.Label()
+  label.cssClasses = ["temperature"]
+
+  setInterval(() => {
+    try {
+      const [, contents] = GLib.file_get_contents(TEMP_PATH)
+      const raw = new TextDecoder().decode(contents).trim()
+      const temp = parseFloat(raw) / 1000
+      const t = temp.toFixed(1)
+      label.label = `${getIcon(temp)} CPU ${t}°C`
+    } catch {
+      label.label = " CPU ERR"
+    }
+  }, CPU_TEMP_UPDATE_INTERVAL)
+
+  return label
 }
 
 function NetworkSpeed() {
+  const NET_PATH = "/proc/net/dev"
+  const IFACE = "enp8s0"
+
   const label = new Gtk.Label()
   label.cssClasses = ["network"]
 
   let prev = { rx: 0, tx: 0 }
 
   setInterval(() => {
-    execAsync("awk '/enp8s0/{print $2, $10}' /proc/net/dev")
-      .then((out: string) => {
-        const [rx, tx] = out.trim().split(" ").map(Number)
-        const down = ((rx - prev.rx) / 1024 / 1024 * 8 * 10).toFixed(1)
-        const up = ((tx - prev.tx) / 1024 / 1024 * 8 * 10).toFixed(1)
-        if (prev.rx !== 0) label.label = `󰓅  󰇚 ${down}Mbp/s 󰕒 ${up}Mbp/s`
-        prev = { rx, tx }
-      })
-      .catch(console.error)
+    try {
+      const [, contents] = GLib.file_get_contents(NET_PATH)
+      const text = new TextDecoder().decode(contents)
+      const line = text.split("\n").find(l => l.trim().startsWith(IFACE))
+      if (!line) return
+
+      const parts = line.trim().split(/\s+/)
+      const rx = parseInt(parts[1])
+      const tx = parseInt(parts[9])
+
+      const down = ((rx - prev.rx) / 1024 / 1024 * 8 * 10).toFixed(1)
+      const up = ((tx - prev.tx) / 1024 / 1024 * 8 * 10).toFixed(1)
+      if (prev.rx !== 0) label.label = `󰓅  󰇚 ${down}Mbp/s 󰕒 ${up}Mbp/s`
+      prev = { rx, tx }
+    } catch {
+      label.label = "󰓅 ERR"
+    }
   }, NETWORK_SPEED_UPDATE_INTERVAL)
 
   return label
