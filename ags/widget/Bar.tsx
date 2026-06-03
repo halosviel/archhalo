@@ -12,6 +12,7 @@ import Hyprland from "gi://AstalHyprland"
 import GdkPixbuf from "gi://GdkPixbuf"
 import Cava from "gi://AstalCava"
 import GLib from "gi://GLib"
+import Gio from "gi://Gio"
 import Wp from "gi://AstalWp"
 
 
@@ -137,7 +138,35 @@ function Workspaces() {
   return box
 }
 
+function RecordingIndicator() {
+  const label = new Gtk.Label()
+  label.cssClasses = ["rec-indicator"]
+  label.label = "🔴 rec"
 
+  const revealer = new Gtk.Revealer()
+  revealer.transitionType = Gtk.RevealerTransitionType.SLIDE_RIGHT
+  revealer.transitionDuration = 400
+  revealer.revealChild = false
+  revealer.child = label
+
+  const STATE_PATH = "/tmp/obs-state"
+
+  setInterval(() => {
+    try {
+      const [, contents] = GLib.file_get_contents(STATE_PATH)
+      const state = new TextDecoder().decode(contents).trim()
+      if (state === "recording") {
+        revealer.revealChild = true
+      } else {
+        revealer.revealChild = false
+      }
+    } catch {
+      revealer.revealChild = false
+    }
+  }, 500)
+
+  return revealer
+}
 
 // ----------------------
 // CENTER
@@ -370,9 +399,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
       application = {app}
     >
       <centerbox cssName="centerbox">
-        <box $type="start" spacing="20" class="box rounded left-box">
+        <box $type="start" spacing="0" class="box rounded left-box">
           <SoundBars />
           <Workspaces />
+          <RecordingIndicator />
         </box>
 
         <box $type="center" spacing="20" class="box rounded center-box">
