@@ -27,6 +27,10 @@ window.Bar {
     border-radius: 2px;
   }
 
+  .cava {
+    margin-right: 20px;
+  }
+
   .ws-btn {
     background: transparent;
     border: none;
@@ -42,6 +46,16 @@ window.Bar {
 
   .ws-btn.active {
     color: rgba(242, 242, 242, 0.8);
+  }
+
+  .rec-indicator {
+    opacity: 1;
+    padding-left: 12px;
+  }
+
+  .rec-indicator.hidden {
+   opacity: 0;
+    margin-left: 20px;
   }
 
 
