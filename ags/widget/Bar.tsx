@@ -28,8 +28,8 @@ const CAVA_BAR_WIDTH = 4
 const CAVA_BAR_HEIGHT = 2
 const CAVA_FRAMERATE = 50
 
-const WORKSPACE_COUNT = 7 // CHARS MUST BE SAME AMOUNT!!!
-const WORKSPACE_CHARS = ["一", "二", "三", "四", "五", "六", "七"]
+const WORKSPACE_COUNT = 8 // CHARS MUST BE SAME AMOUNT!!!
+const WORKSPACE_CHARS = ["一", "二", "三", "四", "五", "六", "七", "八"]
 
 // center
 const TIME_FORMAT = "date '+ %p %-I:%M • %S'" // see man date cmd!!
