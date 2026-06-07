@@ -17,10 +17,7 @@ fail_icon() {
   ls /home/halosviel/Local/Rice/Icons/Fail/*.png | shuf -n 1
 }
 
-# get previous clip path before saving
 PREV=$(get_clip)
-
-# trigger save
 obs-cmd --websocket "$WS" trigger-hotkey ReplayBuffer.Save
 
 # wait until last-replay path changes to a new file
@@ -33,6 +30,7 @@ done
 
 # timed out or no new clip
 if [ "$CLIP" = "$PREV" ] || [ -z "$CLIP" ]; then
+  paplay --volume=32768 /home/halosviel/Local/Rice/Sounds/error.mp3 &
   notify-send "OBS" "Clip did not save: failed or timed out!!" -t 3000 -i "$(fail_icon)"
   exit 1
 fi
@@ -45,10 +43,12 @@ while { [ ! -f "$CLIP" ] || [ "$(lsof "$CLIP" 2>/dev/null)" ]; } && [ "$ELAPSED"
 done
 
 if [ ! -f "$CLIP" ]; then
+  paplay --volume=32768 /home/halosviel/Local/Rice/Sounds/error.mp3 &
   notify-send "OBS" "Clip did not save: file not found!!" -t 3000 -i "$(fail_icon)"
   exit 1
 fi
 
 DURATION=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$CLIP" 2>/dev/null | awk '{printf "%d:%02d", $1/60, $1%60}')
 
+paplay --volume=32768 /home/halosviel/Local/Rice/Sounds/ding.mp3 &
 notify-send "OBS" "Clip saved!! ($DURATION)" -t 3000 -i "$(success_icon)"
