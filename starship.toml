@@ -31,8 +31,7 @@ $character"""
 
 palette = 'catppuccin_mocha'
 
-scan_timeout = 120 # 2026 May 30 - Changed from 30 to 60
-                   # 2026 June 03 - Changed from 60 to 120
+scan_timeout = 300000 # June - Changed to 5m (ITS IN MILLISECONDS!)
 
 [os]
 disabled = false
