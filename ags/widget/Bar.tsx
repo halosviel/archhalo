@@ -149,21 +149,15 @@ function RecordingIndicator() {
   revealer.revealChild = false
   revealer.child = label
 
-  const STATE_PATH = "/tmp/obs-state"
-
   setInterval(() => {
-    try {
-      const [, contents] = GLib.file_get_contents(STATE_PATH)
-      const state = new TextDecoder().decode(contents).trim()
-      if (state === "recording") {
-        revealer.revealChild = true
-      } else {
+    execAsync("obs-cmd --websocket obsws://localhost:4455/slg20Z55ZmFTHX8G recording status")
+      .then((out: string) => {
+        revealer.revealChild = out.toLowerCase().includes("active: true")
+      })
+      .catch(() => {
         revealer.revealChild = false
-      }
-    } catch {
-      revealer.revealChild = false
-    }
-  }, 500)
+      })
+  }, 1000)
 
   return revealer
 }
