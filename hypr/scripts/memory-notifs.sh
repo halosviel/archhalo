@@ -12,8 +12,8 @@ MESSAGES[80]="RAM usage has just reached %d%%!!"
 TITLES[90]="Running out of memory"
 MESSAGES[90]="RAM usage has surpassed %d%%"
 
-TITLES[5]="Out of Memory"
-MESSAGES[5]="CRITICAL: RAM usage has just reached %d%% (start panicking!!)"
+TITLES[95]="Out of Memory"
+MESSAGES[95]="CRITICAL: RAM usage has just reached %d%% (start panicking!!)"
 
 alert_icon() {
   ls /home/halosviel/Local/Rice/Icons/Fail/*.png | shuf -n 1
