@@ -7,8 +7,6 @@ STATUS=$(obs-cmd --websocket obsws://localhost:4455/slg20Z55ZmFTHX8G recording s
 
 if echo "$STATUS" | grep -qi "Active: true"; then
     obs-cmd --websocket obsws://localhost:4455/slg20Z55ZmFTHX8G recording stop
-    echo "stopped" > /tmp/obs-state
 else
     obs-cmd --websocket obsws://localhost:4455/slg20Z55ZmFTHX8G recording start
-    echo "recording" > /tmp/obs-state
 fi
