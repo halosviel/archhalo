@@ -1,11 +1,11 @@
 
 max-visible=3
-default-timeout=5000
+default-timeout=6000
 
 background-color=#19161ae5
 padding=15
-height=200
-width=350
+height=250
+width=375
 
 border-size=1
 border-radius=10
