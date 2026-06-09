@@ -19,7 +19,7 @@ fail_icon() {
 
 PREV=$(get_clip)
 obs-cmd --websocket "$WS" trigger-hotkey ReplayBuffer.Save
-EXCLAMATIONS=1
+EXCLAMATIONS="!"
 
 # wait until last-replay path changes to a new file
 CLIP="$PREV"
