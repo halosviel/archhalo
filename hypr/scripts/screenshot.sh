@@ -22,5 +22,5 @@ REGION=$(slurp) && grim -g "$REGION" "$OUTPUT" && {
   else
     FILESIZE=$(awk "BEGIN {printf \"%.1fMB\", $FILESIZE/1048576}")
   fi
-  notify-send "Screenshot saved$EXCLAMATIONS" "󰲎• $SIZE\n• $FILESIZE" -i "$(success_icon)" -t 4000
+  notify-send "Screenshot saved$EXCLAMATIONS" "󰲎 $SIZE\n $FILESIZE" -i "$(success_icon)" -t 4000
 }
