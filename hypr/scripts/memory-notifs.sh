@@ -20,7 +20,7 @@ MESSAGES[95]="CRITICAL: RAM usage has just reached %d%% (start panicking!!)"
 SOUNDS[95]="/home/halosviel/Local/Rice/Sounds/error.mp3"
 
 alert_icon() {
-  ls /home/halosviel/Local/Rice/Icons/Fail/*.png | shuf -n 1
+  ls /home/halosviel/Local/Rice/Icons/Sad/*.png | shuf -n 1
 }
 
 declare -A notified

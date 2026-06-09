@@ -10,11 +10,11 @@ get_clip() {
 }
 
 success_icon() {
-  ls /home/halosviel/Local/Rice/Icons/Success/*.png | shuf -n 1
+  ls /home/halosviel/Local/Rice/Icons/Happy/*.png | shuf -n 1
 }
 
 fail_icon() {
-  ls /home/halosviel/Local/Rice/Icons/Fail/*.png | shuf -n 1
+  ls /home/halosviel/Local/Rice/Icons/Sad/*.png | shuf -n 1
 }
 
 PREV=$(get_clip)
