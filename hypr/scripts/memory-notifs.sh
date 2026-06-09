@@ -7,16 +7,12 @@ declare -A TITLES
 declare -A MESSAGES
 declare -A SOUNDS
 
-TITLES[80]="High memory usage detected"
-MESSAGES[80]="RAM usage has just reached %d%%!!"
-SOUNDS[80]="/home/halosviel/Local/Rice/Sounds/exclamation.mp3"
-
-TITLES[90]="Running out of memory"
-MESSAGES[90]="RAM usage has surpassed %d%%"
+TITLES[90]="High memory usage"
+MESSAGES[90]=" %d%% of ram being used"
 SOUNDS[90]="/home/halosviel/Local/Rice/Sounds/exclamation.mp3"
 
-TITLES[95]="Out of Memory"
-MESSAGES[95]="CRITICAL: RAM usage has just reached %d%% (start panicking!!)"
+TITLES[95]="High memory usage"
+MESSAGES[95]=" %d%% of ram being used\nSystem may shut down soon!"
 SOUNDS[95]="/home/halosviel/Local/Rice/Sounds/error.mp3"
 
 alert_icon() {
@@ -28,16 +24,17 @@ declare -A notified
 while true; do
   TOTAL=$(grep MemTotal /proc/meminfo | awk '{print $2}')
   AVAILABLE=$(grep MemAvailable /proc/meminfo | awk '{print $2}')
-  USED=$(( (TOTAL - AVAILABLE) * 100 / TOTAL ))
+  USED=$(( (TOTAL - AVAILABLE) * 100 / TOTAL )) 
 
   for THRESHOLD in "${!TITLES[@]}"; do
+    EXCLAMATIONS=$(printf '%.0s!' $(seq 1 $((RANDOM % 3 + 1))))
     MSG=$(printf "${MESSAGES[$THRESHOLD]}" "$USED")
     if [ "$USED" -ge "$THRESHOLD" ] && [ "${notified[$THRESHOLD]}" != "true" ]; then
     notify-send \
         -u critical \
-        "${TITLES[$THRESHOLD]}" \
+        "${TITLES[$THRESHOLD]}$EXCLAMATIONS" \
         "$MSG" \
-        -t 7000 \
+        -t 2000 \
         -i "$(alert_icon)"
 
     paplay --volume=32768 "${SOUNDS[$THRESHOLD]}" &
