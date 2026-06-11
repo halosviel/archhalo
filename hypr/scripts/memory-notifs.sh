@@ -7,13 +7,13 @@ declare -A TITLES
 declare -A MESSAGES
 declare -A SOUNDS
 
-TITLES[85]="High memory usage"
-MESSAGES[85]="%d%% of ram being used"
-SOUNDS[85]="/home/halosviel/Local/Rice/Sounds/exclamation.mp3"
+TITLES[90]="High memory usage"
+MESSAGES[90]="%d%% of ram being used"
+SOUNDS[90]="/home/halosviel/Local/Rice/Sounds/exclamation.mp3"
 
-TITLES[95]="High memory usage"
-MESSAGES[95]="%d%% of ram being used\nSystem may shut down soon!"
-SOUNDS[95]="/home/halosviel/Local/Rice/Sounds/error.mp3"
+TITLES[98]="High memory usage"
+MESSAGES[98]="%d%% of ram being used\nSystem may shut down soon!"
+SOUNDS[98]="/home/halosviel/Local/Rice/Sounds/error.mp3"
 
 alert_icon() {
   ls /home/halosviel/Local/Rice/Icons/Sad/*.png | shuf -n 1
@@ -34,7 +34,7 @@ while true; do
         -u critical \
         "${TITLES[$THRESHOLD]}$EXCLAMATIONS" \
         "$MSG" \
-        -t 2000 \
+        -t 7000 \
         -i "$(alert_icon)"
 
     paplay --volume=32768 "${SOUNDS[$THRESHOLD]}" &
