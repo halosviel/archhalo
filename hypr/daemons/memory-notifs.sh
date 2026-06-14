@@ -29,19 +29,19 @@ while true; do
   for THRESHOLD in "${!TITLES[@]}"; do
     EXCLAMATIONS=$(printf '%.0s!' $(seq 1 $((RANDOM % 3 + 1))))
     MSG=$(printf "${MESSAGES[$THRESHOLD]}" "$USED")
+
     if [ "$USED" -ge "$THRESHOLD" ] && [ "${notified[$THRESHOLD]}" != "true" ]; then
-    notify-send \
-        -u critical \
+    	notify-send \
         "${TITLES[$THRESHOLD]}$EXCLAMATIONS" \
         "$MSG" \
         -t 7000 \
         -i "$(alert_icon)"
 
-    paplay --volume=32768 "${SOUNDS[$THRESHOLD]}" &
+    	paplay --volume=32768 "${SOUNDS[$THRESHOLD]}" &
 
-    notified[$THRESHOLD]="true"
+    	notified[$THRESHOLD]="true"
     elif [ "$USED" -lt "$THRESHOLD" ]; then
-        notified[$THRESHOLD]="false"
+      notified[$THRESHOLD]="false"
     fi 
   done
 

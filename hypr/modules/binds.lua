@@ -1,4 +1,11 @@
---# binds.lua | 2026 June 14
+--[=[
+	[INFO]
+	author: @halosviel
+	created: 2026 June 14
+
+	[DESCRIPTION]
+	Mapping for every keybind.
+]=]
 
 --# ───────────────────────────
 --# general
@@ -39,7 +46,15 @@ hl.bind("SUPER + C", function()
 end)
 
 hl.bind("SUPER + V", function()
-	hl.dispatch(hl.dsp.exec_cmd("kitty --title floating-term"))
+	hl.dispatch(hl.dsp.exec_cmd("kitty --title floating"))
+end)
+
+hl.bind("SUPER + A", function()
+	hl.dispatch(hl.dsp.exec_cmd("walker"))
+end)
+
+hl.bind("SUPER + D", function()
+	hl.dispatch(hl.dsp.exec_cmd("nautilus"))
 end)
 
 

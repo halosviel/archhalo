@@ -19,7 +19,7 @@ while true; do
   for THRESHOLD in "${THRESHOLDS[@]}"; do
     EXCLAMATIONS=$(printf '%.0s!' $(seq 1 $((RANDOM % 3 + 1))))
     if [ "$TEMP" -ge "$THRESHOLD" ] && [ "${notified[$THRESHOLD]}" != "true" ]; then
-      notify-send -u critical "High CPU temperature$EXCLAMATIONS" "CPU is at ${TEMP}°C" -t 7000 -i "$(alert_icon)"
+      notify-send "High CPU temperature$EXCLAMATIONS" "CPU is at ${TEMP}°C" -t 7000 -i "$(alert_icon)"
       paplay --volume=32768 "$SOUND" &
       notified[$THRESHOLD]="true"
     elif [ "$TEMP" -lt "$THRESHOLD" ]; then
