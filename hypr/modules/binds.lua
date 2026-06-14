@@ -4,16 +4,29 @@
 --# general
 --# ───────────────────────────
 
+--# close window
 hl.bind("SUPER + X", function()
 	hl.dispatch(hl.dsp.window.close())
 end)
 
+--# kill window
 hl.bind("SUPER + CTRL + X", function()
 	hl.dispatch(hl.dsp.window.kill())
 end)
 
+--# float window
 hl.bind("SUPER + F", function()
 	hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
+end)
+
+--# move window
+hl.bind("SUPER + mouse:272", function()
+  hl.dispatch(hl.dsp.window.drag())
+end)
+
+--# resize window
+hl.bind("SUPER + mouse:273", function()
+  hl.dispatch(hl.dsp.window.resize())
 end)
 
 
@@ -24,6 +37,11 @@ end)
 hl.bind("SUPER + C", function()
 	hl.dispatch(hl.dsp.exec_cmd("kitty"))
 end)
+
+hl.bind("SUPER + V", function()
+	hl.dispatch(hl.dsp.exec_cmd("kitty --title floating-term"))
+end)
+
 
 
 --# ───────────────────────────
@@ -53,8 +71,7 @@ hl.bind("SUPER + Q", function()
 end)
 
 
-
---# MOVE APP TO
+--# MOVE WINDOW TO WORKSPACE
 
 --# 1-5
 for i = 1, 5 do
