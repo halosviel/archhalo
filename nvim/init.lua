@@ -12,14 +12,12 @@ vim.opt.guifont = "JetBrainsMono Nerd Font:h14"
 vim.opt.number = true
 vim.opt.mouse = "a"
 vim.opt.linespace = 4
-vim.opt.expandtab = true
+vim.opt.expandtab = false
 vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
 vim.opt.smartindent = true
 vim.opt.autoindent = true
 vim.opt.foldenable = false
-
-
 
 
 
@@ -205,11 +203,11 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     hl(0, "NormalNC", { bg = "none" })
     hl(0, "NormalFloat", { bg = "none" })
   end,
+  
 })
 
 -- header (ascii) color
 vim.api.nvim_set_hl(0, "SnacksDashboardHeader", { fg = "#9463ff" })
-
 
 
 
