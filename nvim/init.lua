@@ -37,8 +37,6 @@ vim.opt.rtp:prepend(lazypath)
 
 
 
-
-
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 -- 3 | Plugins
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -190,8 +188,6 @@ require("lazy").setup({
 
 
 
-
-
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 -- 4 | Customisations
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -208,7 +204,6 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 
 -- header (ascii) color
 vim.api.nvim_set_hl(0, "SnacksDashboardHeader", { fg = "#9463ff" })
-
 
 
 
@@ -270,6 +265,8 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   end,
 })
 
+
+
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 -- 6 | Keybinds
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -298,3 +295,16 @@ vim.keymap.set("n", "<C-d>", function()
   Snacks.dashboard()
 end)
 
+
+--# other
+
+--# stops auto comment on new line if prev line was a comment on lua files
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "lua",
+  callback = function()
+    vim.opt_local.formatoptions:remove({ "r", "o" })
+  end,
+})
+
+
+-- TODO: clean up file
