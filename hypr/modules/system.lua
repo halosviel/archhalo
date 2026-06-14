@@ -1,4 +1,11 @@
---# system.lua | 2026 June 14
+--[=[
+	[INFO]
+	author: @halosviel
+	created: 2026 June 14
+
+	[DESCRIPTION]
+	Contains essential system definitions.
+]=]
 
 --# ───────────────────────────
 --# monitors
