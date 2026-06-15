@@ -28,7 +28,7 @@ hl.window_rule({
 		title = "floating",
     class = "kitty",
   },
-	size = { 700, 450 }
+	size = { 750, 450 }
 })
 
 hl.window_rule({
@@ -37,7 +37,8 @@ hl.window_rule({
   },
   float = true,
 	center = true,
-	size = { 900, 550 }
+	size = { 750, 450 },
+	opacity = 0.9
 })
 
 --# images
@@ -98,13 +99,6 @@ hl.window_rule({
 	size = { 800, 500 }
 })
 
-hl.window_rule({
-  match = {
-    class = "org.kde.dolphin"
-  },
-	opacity = 0.9
-})
-
 --# w8 btop
 hl.window_rule({
   match = {
@@ -122,7 +116,7 @@ hl.window_rule({
   match = {
     class = "firefox"
   },
-	opacity = 0.9
+	opacity = 0.95
 })
 
 hl.window_rule({
