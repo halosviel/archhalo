@@ -105,7 +105,7 @@ function Workspaces() {
     btn.label = WORKSPACE_CHARS[i - 1]
     btn.cssClasses = ["ws-btn"]
     btn.connect("clicked", () => {
-      hypr.dispatch("workspace", `${i}`)
+      hypr.dispatch("hl.dsp.focus", `({ workspace = ${i}, on_current_monitor = true })`)
     })
 
     box.append(btn)
