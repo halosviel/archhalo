@@ -45,11 +45,10 @@ if echo "$obsStatus" | grep -qi "Active: true"; then
 			paplay --volume=32768 $NTF_FAIL_SOUND &
 			notify-send "Recording failed to save$exclamations" "Execution timed out" -i "$(iconSad)" -t $NTF_FAIL_LIFETIME
 			exit 1
-      break
     fi
 
     last_size=$size
-    sleep SAVE_YIELD_INTERVAL
+    sleep $SAVE_YIELD_INTERVAL
 	done
 
 	paplay --volume=32768 $NTF_DONE_SOUND &

@@ -149,12 +149,23 @@ function RecordingIndicator() {
   revealer.revealChild = false
   revealer.child = label
 
+  let wasRecording = false
+
   setInterval(() => {
     execAsync("obs-cmd --websocket obsws://localhost:4455/slg20Z55ZmFTHX8G recording status")
       .then((out: string) => {
-        revealer.revealChild = out.toLowerCase().includes("active: true")
+        const isRecording = out.toLowerCase().includes("active: true")
+
+        if (wasRecording && !isRecording) {
+          // recording just stopped (via UI button, hotkey, etc.) - notify
+          execAsync("bash -c 'sleep 1; bash ~/.config/hypr/scripts/obs_record_ntf.sh'").catch(() => {})
+        }
+
+        wasRecording = isRecording
+        revealer.revealChild = isRecording
       })
       .catch(() => {
+        wasRecording = false
         revealer.revealChild = false
       })
   }, 1000)
