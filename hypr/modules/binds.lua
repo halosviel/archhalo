@@ -46,17 +46,17 @@ end)
 
 --# keyboard knob right
 hl.bind("XF86AudioRaiseVolume", function()
-  hl.dispatch(hl.dsp.exec_cmd("~/.config/volume-controls.sh up"))
+  hl.dispatch(hl.dsp.exec_cmd("~/.config/hypr/scripts/volume_utils.sh up"))
 end)
 
 --# keyboard knob left
 hl.bind("XF86AudioLowerVolume", function()
-  hl.dispatch(hl.dsp.exec_cmd("~/.config/volume-controls.sh down"))
+  hl.dispatch(hl.dsp.exec_cmd("~/.config/hypr/scripts/volume_utils.sh down"))
 end)
 
 --# keyboard knob press
 hl.bind("XF86AudioMute", function()
-	hl.dispatch(hl.dsp.exec_cmd("~/.config/volume-controls.sh mute"))
+	hl.dispatch(hl.dsp.exec_cmd("~/.config/hypr/scripts/volume_utils.sh mute"))
 end)
 
 
@@ -111,19 +111,19 @@ end)
 
 
 --# ───────────────────────────
---# daemons
+--# scripts
 --# ───────────────────────────
 
 hl.bind("SUPER + S", function()
-	hl.dispatch(hl.dsp.exec_cmd("bash ~/.config/hypr/daemons/screenshot.sh"))
+	hl.dispatch(hl.dsp.exec_cmd("bash ~/.config/hypr/scripts/screenshot.sh"))
 end)
 
  hl.bind("SUPER + R", function()
-	hl.dispatch(hl.dsp.exec_cmd("bash ~/.config/hypr/daemons/obs_record.sh"))
+	hl.dispatch(hl.dsp.exec_cmd("bash ~/.config/hypr/scripts/obs_record.sh"))
 end)
 
 hl.bind("SUPER + B", function()
-	hl.dispatch(hl.dsp.exec_cmd("bash ~/.config/hypr/daemons/obs_clip.sh"))
+	hl.dispatch(hl.dsp.exec_cmd("bash ~/.config/hypr/scripts/obs_clip.sh"))
 end)
 
 
