@@ -16,6 +16,6 @@ end
 require("modules.system")
 require("modules.priority")
 require("modules.binds")
-require("modules.floats")
+require("modules.rules")
 require("modules.init")
 require("modules.cats")

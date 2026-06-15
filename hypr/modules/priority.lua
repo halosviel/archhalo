@@ -13,5 +13,5 @@
 
 
 hl.on("hyprland.start", function()
-	hl.exec_cmd("bash ~/.config/hypr/daemons/ags-init.sh")
+	hl.exec_cmd("systemctl --user start ags.service")
 end)
