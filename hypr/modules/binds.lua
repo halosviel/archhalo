@@ -8,7 +8,7 @@
 ]=]
 
 --# ───────────────────────────
---# general
+--# hyprland
 --# ───────────────────────────
 
 --# close window
@@ -26,15 +26,62 @@ hl.bind("SUPER + F", function()
 	hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
 end)
 
---# move window
+
+--# ───────────────────────────
+--# peripherals
+--# ───────────────────────────
+
+--# NOTE: audio binds need playerctl
+
+--# lmb move window
 hl.bind("SUPER + mouse:272", function()
   hl.dispatch(hl.dsp.window.drag())
 end)
 
---# resize window
+--# rmb resize window
 hl.bind("SUPER + mouse:273", function()
   hl.dispatch(hl.dsp.window.resize())
 end)
+
+
+--# keyboard knob right
+hl.bind("XF86AudioRaiseVolume", function()
+  hl.dispatch(hl.dsp.exec_cmd("~/.config/volume-controls.sh up"))
+end)
+
+--# keyboard knob left
+hl.bind("XF86AudioLowerVolume", function()
+  hl.dispatch(hl.dsp.exec_cmd("~/.config/volume-controls.sh down"))
+end)
+
+--# keyboard knob press
+hl.bind("XF86AudioMute", function()
+	hl.dispatch(hl.dsp.exec_cmd("~/.config/volume-controls.sh mute"))
+end)
+
+
+--# headphones play/pause
+hl.bind("XF86AudioPlay", function()
+  hl.dispatch(hl.dsp.exec_cmd("playerctl play-pause"))
+end)
+
+--# headphones play/pause
+hl.bind("XF86AudioPause", function()
+	hl.dispatch(hl.dsp.exec_cmd("playerctl play-pause"))
+end)
+
+
+
+--# divoom next
+hl.bind("XF86AudioNext", function()
+  hl.dispatch(hl.dsp.exec_cmd("playerctl next"))
+end)
+
+--# divoom previous
+hl.bind("XF86AudioPrev", function()
+  hl.dispatch(hl.dsp.exec_cmd("playerctl previous"))
+end)
+
 
 
 --# ───────────────────────────
@@ -55,6 +102,28 @@ end)
 
 hl.bind("SUPER + D", function()
 	hl.dispatch(hl.dsp.exec_cmd("nautilus"))
+end)
+
+hl.bind("SUPER + L", function()
+	hl.dispatch(hl.dsp.exec_cmd("com.sidevesh.Luminance"))
+end)
+
+
+
+--# ───────────────────────────
+--# daemons
+--# ───────────────────────────
+
+hl.bind("SUPER + S", function()
+	hl.dispatch(hl.dsp.exec_cmd("bash ~/.config/hypr/daemons/screenshot.sh"))
+end)
+
+ hl.bind("SUPER + R", function()
+	hl.dispatch(hl.dsp.exec_cmd("bash ~/.config/hypr/daemons/obs_record.sh"))
+end)
+
+hl.bind("SUPER + B", function()
+	hl.dispatch(hl.dsp.exec_cmd("bash ~/.config/hypr/daemons/obs_clip.sh"))
 end)
 
 

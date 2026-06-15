@@ -1,4 +1,13 @@
---# cats.lua | 2026 June 14
+
+--[=[
+	[INFO]
+	author: @halosviel
+	created: 2026 June 14
+
+	[DESCRIPTION]
+
+]=]
+
 
 --[[
 	"Cats" is short for categories (variables).
@@ -20,7 +29,7 @@ hl.config({
 	decoration = {
   	rounding = 8,
 		active_opacity = 1,
-		inactive_opacity = 0.8,
+		inactive_opacity = 1,
 	},
 
 	input = {
