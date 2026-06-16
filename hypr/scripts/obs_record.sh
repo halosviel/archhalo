@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # [CONFIG]
@@ -87,3 +88,4 @@ else
 	# start recording
   obs-cmd --websocket obsws://localhost:4455/slg20Z55ZmFTHX8G recording start
 fi
+
