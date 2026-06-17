@@ -55,18 +55,18 @@ hl.config({
 
 --# still counting these as variables (they used to be).
 
-hl.curve("custom", { type = "spring", mass = 2, stiffness = 60, dampening = 22 })
+hl.curve("custom", { type = "spring", mass = 2.2, stiffness = 80, dampening = 25 })
 
 hl.animation({
 	leaf = "windows",
 	enabled = true,
-	speed = 5,
+	speed = 6,
 	spring = "custom"
 })
 
 hl.animation({
 	leaf = "workspaces",
 	enabled = true,
-	speed = 5,
+	speed = 9,
 	spring = "custom"
 })
