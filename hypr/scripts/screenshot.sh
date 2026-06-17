@@ -3,7 +3,7 @@
 # [CONFIG]
 NTF_LIFETIME=3000
 NTF_DONE_SOUND="/home/halosviel/Local/Rice/Sounds/pop-up-blocked.mp3"
-SAVE_LOCATION="/home/halosviel/Captures/$(date '+%Y-%m-%d_%H-%M-%S').png"
+SAVE_LOCATION="/home/halosviel/Captures/$(date '+screenshot_%-I%P_m%M-s%S').png"
 
 # -->
 
@@ -15,6 +15,9 @@ fi
 iconHappy() {
   ls /home/halosviel/Local/Rice/Icons/Happy/*.png | shuf -n 1
 }
+
+# -->
+
 exclamations=$(printf '%.0s!' $(seq 1 $((RANDOM % 3 + 1))))
 
 REGION=$(slurp) && grim -g "$REGION" "$SAVE_LOCATION" && wl-copy < "$SAVE_LOCATION" && {
