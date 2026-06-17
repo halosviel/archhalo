@@ -22,3 +22,5 @@ bind 'set enable-bracketed-paste off'
 
 # starship startup
 eval "$(starship init bash)"
+
+. "$HOME/.cargo/env"
