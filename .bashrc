@@ -1,7 +1,3 @@
-#
-# ~/.bashrc
-#
-
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
@@ -13,6 +9,10 @@ PS1='[\u@\h \W]\$ '
 alias matrix="unimatrix -c blue -s 93"
 alias clock="tty-clock -tcC 7"
 alias ff="fastfetch"
+
+alias shutdown="poweroff"
+alias restart="reboot"
+alias logout="hyprctl dispatch exit"
 
 # vsc os keychain fix
 alias code="code --password-store=basic"
