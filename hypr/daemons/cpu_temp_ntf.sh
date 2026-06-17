@@ -1,29 +1,37 @@
 #!/bin/bash
 
+# [CONFIG]
 CHECK_INTERVAL=2
 TEMP_PATH="/sys/class/hwmon/hwmon1/temp1_input"
 SOUND="/home/halosviel/Local/Rice/Sounds/exclamation.mp3"
+NTF_LIFETIME=5000
 
 THRESHOLDS=(70 80 90)
 
-alert_icon() {
+# -->
+
+iconSad() {
   ls /home/halosviel/Local/Rice/Icons/Sad/*.png | shuf -n 1
 }
+
+# -->
 
 declare -A notified
 
 while true; do
-  RAW=$(cat "$TEMP_PATH")
-  TEMP=$((RAW / 1000))
+  rawTemperature=$(cat "$TEMP_PATH")
+  newTemperature=$((rawTemperature / 1000))
 
-  for THRESHOLD in "${THRESHOLDS[@]}"; do
-    EXCLAMATIONS=$(printf '%.0s!' $(seq 1 $((RANDOM % 3 + 1))))
-    if [ "$TEMP" -ge "$THRESHOLD" ] && [ "${notified[$THRESHOLD]}" != "true" ]; then
-      notify-send "High CPU temperature$EXCLAMATIONS" "CPU is at ${TEMP}°C" -t 7000 -i "$(alert_icon)"
+	exclamations=$(printf '%.0s!' $(seq 1 $((RANDOM % 3 + 1))))
+
+  for threshold in "${THRESHOLDS[@]}"; do
+    if [ "$newTemperature" -ge "$threshold" ] && [ "${notified[$threshold]}" != "true" ]; then
+      notify-send "High CPU temperature$exclamations" "CPU is at ${newTemperature}°C" -t $NTF_LIFETIME -i "$(iconSad)"
       paplay --volume=32768 "$SOUND" &
-      notified[$THRESHOLD]="true"
-    elif [ "$TEMP" -lt "$THRESHOLD" ]; then
-      notified[$THRESHOLD]="false"
+
+      notified[$threshold]="true"
+    elif [ "$newTemperature" -lt "$threshold" ]; then
+      notified[$threshold]="false"
     fi
   done
 
