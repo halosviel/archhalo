@@ -22,7 +22,8 @@ hl.config({
   	resize_on_border = true,
   	gaps_out = { top = 9, left = 16, right = 16, bottom = 16 },
 		gaps_workspaces = -16,
-		locale = "en_US"
+		locale = "en_US",
+		allow_tearing = true
 	},
 
 	decoration = {

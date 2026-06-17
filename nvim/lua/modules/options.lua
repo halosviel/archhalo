@@ -1,0 +1,10 @@
+vim.opt.guifont = "JetBrainsMono Nerd Font:h14"
+vim.opt.number = true
+vim.opt.mouse = "a"
+vim.opt.linespace = 4
+vim.opt.expandtab = false
+vim.opt.shiftwidth = 2
+vim.opt.tabstop = 2
+vim.opt.smartindent = true
+vim.opt.autoindent = true
+vim.opt.foldenable = false
