@@ -1,4 +1,3 @@
-
 --[=[
 	[INFO]
 	author: @halosviel
@@ -10,7 +9,6 @@
 
 	Runs after system.lua.
 ]=]
-
 
 hl.on("hyprland.start", function()
 	hl.exec_cmd("systemctl --user start ags.service")
