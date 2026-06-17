@@ -7,5 +7,6 @@ return {
       transparent = true,
     })
     vim.cmd("colorscheme nightfall")
+    vim.api.nvim_set_hl(0, "SnacksDashboardHeader", { fg = "#9463ff" })
   end
 }

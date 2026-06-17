@@ -95,9 +95,6 @@ return {
   config = function(_, opts)
     require("snacks").setup(opts)
 
-    -- header (ascii) color
-    vim.api.nvim_set_hl(0, "SnacksDashboardHeader", { fg = "#9463ff" })
-
     -- auto-reveal file in explorer on open
     local explorer_opened = false
 
