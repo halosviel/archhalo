@@ -9,10 +9,12 @@ vim.api.nvim_create_autocmd("ColorScheme", {
   end
 })
 
---# stops auto comment on new line if prev line was a comment on lua files
+--# stops auto comment on new line if prev line was a comment
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "lua",
+  pattern = "*",
   callback = function()
-    vim.opt_local.formatoptions:remove({"r", "o"})
+    vim.schedule(function()
+      vim.opt_local.formatoptions:remove({"r", "o"})
+    end)
   end
 })
