@@ -167,6 +167,13 @@ hl.window_rule({
 
 hl.window_rule({
   match = {
+		title = "nvim"
+  },
+	opacity = 0.9
+})
+
+hl.window_rule({
+  match = {
     class = "org.vinegarhq.Sober"
   },
 	workspace = 2
@@ -191,7 +198,7 @@ hl.window_rule({
 	size = { 351, 198 },
 	move = { -6, 500 },		
 	opaque = true,
-	rounding = 0
+	rounding = 12
 })
 
 
