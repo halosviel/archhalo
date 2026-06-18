@@ -1,20 +1,24 @@
 #!/bin/bash
 
 # [CONFIG]
-DONE_MESSAGES=(
+REPLY_MESSAGES=(
     "Claude-chan has a message for you:"
     "Claude-chan responded:"
     "New message from Claude-chan:"
     "Unread message from Claude-chan:"
 )
 
-ATTENTION_MESSAGES=(
+COMPLETED_MESSAGES="Claude-chan completed a task:"
+
+PERMISSION_MESSAGES=(
     "Claude-chan needs to"
     "Claude-chan wants to"
     "Claude-chan is trying to"
 )
 
-SOUND="/home/halosviel/Local/Rice/Sounds/information-bar.mp3"
+REPLY_SOUND="/home/halosviel/Local/Rice/Sounds/claude_reply.mp3"
+COMPLETED_SOUND="/home/halosviel/Local/Rice/Sounds/claude_done.mp3"
+PERMISSION_SOUND="/home/halosviel/Local/Rice/Sounds/claude_permission.mp3"
 
 # -->
 
@@ -26,10 +30,23 @@ iconClaude() {
 
 type="${1:-stop}"
 
+LOCK="/tmp/claude_ntf.lock"
+
+if [[ "$type" == "completed" ]]; then
+    summary="$2"
+    exclamations=$(printf '%.0s!' $(seq 1 $((RANDOM % 2 + 1))))
+    # Claim the lock so the stop hook firing right after stays quiet
+    date +%s > "$LOCK"
+    body="$COMPLETED_MESSAGES"
+    [[ -n "$summary" ]] && body+=$'\n'"\"$summary\""
+    paplay --volume=52429 "$COMPLETED_SOUND" &
+    notify-send -u low "Claude Mail$exclamations" "$body" -i "$(iconClaude)"
+    exit 0
+fi
 
 if [[ "$type" == "permission" ]]; then
     input=$(cat)
-    idx=$(( RANDOM % ${#ATTENTION_MESSAGES[@]} ))
+    idx=$(( RANDOM % ${#PERMISSION_MESSAGES[@]} ))
     exclamations=$(printf '%.0s!' $(seq 1 $((RANDOM % 3 + 1))))
     desc=$(echo "$input" | python3 -c "
 import sys, json
@@ -52,17 +69,24 @@ else:
     desc = 'use ' + tool
 print(desc[0].lower() + desc[1:] if desc else desc)
 " 2>/dev/null)
-    body="${ATTENTION_MESSAGES[$idx]} $desc"
-		paplay --volume=32768 "$SOUND" &
+    body="${PERMISSION_MESSAGES[$idx]} $desc"
+		paplay --volume=52429 "$PERMISSION_SOUND" &
     notify-send -u normal "Claude Mail$exclamations" "$body" -i "$(iconClaude)"
     exit 0
 fi
 
+now=$(date +%s)
+if [[ -f "$LOCK" ]]; then
+    last=$(cat "$LOCK")
+    (( now - last < 2 )) && exit 0
+fi
+echo "$now" > "$LOCK"
+
 if [[ "$type" == "notification" ]]; then
-    msgs=("${ATTENTION_MESSAGES[@]}")
+    msgs=("${PERMISSION_MESSAGES[@]}")
     urgency="normal"
 else
-    msgs=("${DONE_MESSAGES[@]}")
+    msgs=("${REPLY_MESSAGES[@]}")
     urgency="low"
 fi
 
@@ -102,9 +126,9 @@ for line in reversed(transcript):
                         first = text.split('\n')[0].rstrip()
                         if len(first) > 25:
                             end = 25 + re.search(r'\S*', first[25:]).end()
-                            print(first[:end].rstrip() + '..')
+                            print(first[:end].rstrip().rstrip('.,;:') + '...')
                         else:
-                            print(first + ('..' if '\n' in text else ''))
+                            print(first + ('...' if '\n' in text else ''))
                         sys.exit(0)
     except Exception:
         pass
@@ -115,5 +139,5 @@ fi
 
 body="${msgs[$idx]}"
 [[ -n "$preview" ]] && body+=$'\n'"\"$preview\""
-paplay --volume=32768 "$SOUND" &
+paplay --volume=52429 "$REPLY_SOUND" &
 notify-send -u "$urgency" "Claude Mail$exclamations" "$body" -i "$(iconClaude)"
