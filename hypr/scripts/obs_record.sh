@@ -11,6 +11,7 @@ SAVE_TIMEOUT=5000
 SAVE_YIELD_INTERVAL=0.1
 
 # -->
+#
 
 iconHappy() {
   ls /home/halosviel/Local/Rice/Icons/Happy/*.png | shuf -n 1
@@ -82,7 +83,7 @@ if echo "$obsStatus" | grep -qi "Active: true"; then
 	fi
 	
 	# send notification
-  notify-send "Recording saved$exclamations" "󰔛 $fileDuration\n $fileSize" -t $NTF_DONE_LIFETIME
+  notify-send "Recording saved$exclamations" "󰔛 $fileDuration\n $fileSize" -i "$(iconHappy)" -t $NTF_DONE_LIFETIME
 else
 	# start recording
   obs-cmd --websocket obsws://localhost:4455/slg20Z55ZmFTHX8G recording start
