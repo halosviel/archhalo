@@ -14,29 +14,17 @@ ATTENTION_MESSAGES=(
     "Claude-chan is trying to"
 )
 
+SOUND="/home/halosviel/Local/Rice/Sounds/information-bar.mp3"
+
 # -->
 
-iconHappy() {
-  ls /home/halosviel/Local/Rice/Icons/Happy/*.png | shuf -n 1
+iconClaude() {
+  ls /home/halosviel/Local/Rice/Icons/Claude/*.png | shuf -n 1
 }
 
 # -->
 
 type="${1:-stop}"
-
-# Only notify if the user is on a different workspace than Claude
-active_ws=$(hyprctl activeworkspace -j 2>/dev/null | jq -r '.id' 2>/dev/null)
-claude_ws=""
-pid=$$
-while [[ -n "$pid" && "$pid" -gt 1 ]]; do
-    ws=$(hyprctl clients -j 2>/dev/null | jq -r --arg pid "$pid" '.[] | select(.pid == ($pid | tonumber)) | .workspace.id' 2>/dev/null)
-    if [[ -n "$ws" && "$ws" != "null" ]]; then
-        claude_ws="$ws"
-        break
-    fi
-    pid=$(ps -o ppid= -p "$pid" 2>/dev/null | tr -d ' ')
-done
-[[ -n "$active_ws" && -n "$claude_ws" && "$active_ws" == "$claude_ws" ]] && exit 0
 
 
 if [[ "$type" == "permission" ]]; then
@@ -65,7 +53,8 @@ else:
 print(desc[0].lower() + desc[1:] if desc else desc)
 " 2>/dev/null)
     body="${ATTENTION_MESSAGES[$idx]} $desc"
-    notify-send -u normal "Claude Mail$exclamations" "$body" -i "$(iconHappy)"
+		paplay --volume=32768 "$SOUND" &
+    notify-send -u normal "Claude Mail$exclamations" "$body" -i "$(iconClaude)"
     exit 0
 fi
 
@@ -126,4 +115,5 @@ fi
 
 body="${msgs[$idx]}"
 [[ -n "$preview" ]] && body+=$'\n'"\"$preview\""
-notify-send -u "$urgency" "Claude Mail$exclamations" "$body" -i "$(iconHappy)"
+paplay --volume=32768 "$SOUND" &
+notify-send -u "$urgency" "Claude Mail$exclamations" "$body" -i "$(iconClaude)"
