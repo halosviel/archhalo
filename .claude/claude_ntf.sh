@@ -20,6 +20,7 @@ PERMISSION_MESSAGES=(
 REPLY_SOUND="/home/halosviel/Local/Rice/Sounds/claude_reply.mp3"
 COMPLETED_SOUND="/home/halosviel/Local/Rice/Sounds/claude_done.mp3"
 PERMISSION_SOUND="/home/halosviel/Local/Rice/Sounds/claude_permission.mp3"
+NTF_LIFETIME=7000
 
 # -->
 
@@ -41,7 +42,7 @@ if [[ "$type" == "completed" ]]; then
     body="$COMPLETED_MESSAGES"
     [[ -n "$summary" ]] && body+=$'\n'"\"$summary\""
     paplay --volume=52429 "$COMPLETED_SOUND" &
-    notify-send -u low "Claude Mail$exclamations" "$body" -i "$(iconClaude)"
+    notify-send -u low "Claude Mail$exclamations" "$body" -i "$(iconClaude)" -t $NTF_LIFETIME
     exit 0
 fi
 
@@ -72,7 +73,7 @@ print(desc[0].lower() + desc[1:] if desc else desc)
 " 2>/dev/null)
     body="${PERMISSION_MESSAGES[$idx]} $desc"
 		paplay --volume=52429 "$PERMISSION_SOUND" &
-    notify-send -u normal "Claude Mail$exclamations" "$body" -i "$(iconClaude)"
+    notify-send -u normal "Claude Mail$exclamations" "$body" -i "$(iconClaude)" -t $NTF_LIFETIME
     exit 0
 fi
 
@@ -141,4 +142,4 @@ fi
 body="${msgs[$idx]}"
 [[ -n "$preview" ]] && body+=$'\n'"\"$preview\""
 paplay --volume=52429 "$REPLY_SOUND" &
-notify-send -u "$urgency" "Claude Mail$exclamations" "$body" -i "$(iconClaude)"
+notify-send -u "$urgency" "Claude Mail$exclamations" "$body" -i "$(iconClaude)" -t $NTF_LIFETIME
