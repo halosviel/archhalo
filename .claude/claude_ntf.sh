@@ -20,6 +20,7 @@ PERMISSION_MESSAGES=(
 REPLY_SOUND="/home/halosviel/Local/Rice/Sounds/claude_reply.mp3"
 COMPLETED_SOUND="/home/halosviel/Local/Rice/Sounds/claude_done.mp3"
 PERMISSION_SOUND="/home/halosviel/Local/Rice/Sounds/claude_permission.mp3"
+
 NTF_LIFETIME=7000
 
 # -->
