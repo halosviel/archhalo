@@ -2,10 +2,10 @@
 
 # [CONFIG]
 DONE_MESSAGES=(
-    "Claude-chan has a message for you"
-    "Claude-chan responded"
-    "New message from Claude-chan!"
-    "Unread message from Claude-chan"
+    "Claude-chan has a message for you:"
+    "Claude-chan responded:"
+    "New message from Claude-chan:"
+    "Unread message from Claude-chan:"
 )
 
 ATTENTION_MESSAGES=(
@@ -13,6 +13,12 @@ ATTENTION_MESSAGES=(
     "Claude-chan wants to"
     "Claude-chan is trying to"
 )
+
+# -->
+
+iconHappy() {
+  ls /home/halosviel/Local/Rice/Icons/Happy/*.png | shuf -n 1
+}
 
 # -->
 
@@ -32,6 +38,7 @@ while [[ -n "$pid" && "$pid" -gt 1 ]]; do
 done
 [[ -n "$active_ws" && -n "$claude_ws" && "$active_ws" == "$claude_ws" ]] && exit 0
 
+
 if [[ "$type" == "permission" ]]; then
     input=$(cat)
     idx=$(( RANDOM % ${#ATTENTION_MESSAGES[@]} ))
@@ -45,9 +52,11 @@ if tool == 'Bash':
     cmd = inp.get('command', '').strip().split('\n')[0]
     if 'git push' in cmd:      desc = 'push to GitHub'
     elif 'git commit' in cmd:  desc = 'create a commit'
-    elif 'git' in cmd:         desc = 'run: ' + cmd[:35]
     elif cmd.startswith('rm'): desc = 'delete files'
-    else:                      desc = 'run: ' + cmd[:35]
+    else:
+        desc = inp.get('description', '').strip()
+        if not desc:
+            desc = 'run: ' + cmd[:35]
 elif tool in ('Write', 'Edit'):
     name = inp.get('file_path', '?').split('/')[-1]
     desc = ('write to ' if tool == 'Write' else 'edit ') + name
@@ -56,7 +65,7 @@ else:
 print(desc)
 " 2>/dev/null)
     body="${ATTENTION_MESSAGES[$idx]} $desc"
-    notify-send -u normal "Claude Mail$exclamations" "$body"
+    notify-send -u normal "Claude Mail$exclamations" "$body" -i "$(iconHappy)"
     exit 0
 fi
 
@@ -117,4 +126,4 @@ fi
 
 body="${msgs[$idx]}"
 [[ -n "$preview" ]] && body+=$'\n'"\"$preview\""
-notify-send -u "$urgency" "Claude Mail$exclamations" "$body"
+notify-send -u "$urgency" "Claude Mail$exclamations" "$body" -i "$(iconHappy)"
