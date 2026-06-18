@@ -9,11 +9,9 @@ DONE_MESSAGES=(
 )
 
 ATTENTION_MESSAGES=(
-    "Claude-chan needs your attention"
-    "Claude-chan needs something from you"
-    "Claude-chan needs permissions to do something"
-    "Claude-chan is needs your response"
-    "Claude-chan has something important!"
+    "Claude-chan needs to"
+    "Claude-chan wants to"
+    "Claude-chan is trying to"
 )
 
 # -->
@@ -33,6 +31,34 @@ while [[ -n "$pid" && "$pid" -gt 1 ]]; do
     pid=$(ps -o ppid= -p "$pid" 2>/dev/null | tr -d ' ')
 done
 [[ -n "$active_ws" && -n "$claude_ws" && "$active_ws" == "$claude_ws" ]] && exit 0
+
+if [[ "$type" == "permission" ]]; then
+    input=$(cat)
+    idx=$(( RANDOM % ${#ATTENTION_MESSAGES[@]} ))
+    exclamations=$(printf '%.0s!' $(seq 1 $((RANDOM % 3 + 1))))
+    desc=$(echo "$input" | python3 -c "
+import sys, json
+data = json.loads(sys.stdin.read())
+tool = data.get('tool_name', '')
+inp = data.get('tool_input', {})
+if tool == 'Bash':
+    cmd = inp.get('command', '').strip().split('\n')[0]
+    if 'git push' in cmd:      desc = 'push to GitHub'
+    elif 'git commit' in cmd:  desc = 'create a commit'
+    elif 'git' in cmd:         desc = 'run: ' + cmd[:35]
+    elif cmd.startswith('rm'): desc = 'delete files'
+    else:                      desc = 'run: ' + cmd[:35]
+elif tool in ('Write', 'Edit'):
+    name = inp.get('file_path', '?').split('/')[-1]
+    desc = ('write to ' if tool == 'Write' else 'edit ') + name
+else:
+    desc = 'use ' + tool
+print(desc)
+" 2>/dev/null)
+    body="${ATTENTION_MESSAGES[$idx]} $desc"
+    notify-send -u normal "Claude Mail$exclamations" "$body"
+    exit 0
+fi
 
 if [[ "$type" == "notification" ]]; then
     msgs=("${ATTENTION_MESSAGES[@]}")
