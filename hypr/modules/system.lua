@@ -31,7 +31,7 @@ hl.monitor({
 --# for descriptions, see https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
 
 --# hyprland
-hl.env("HYPRLAND_TRACE", "1")
+--hl.env("HYPRLAND_TRACE", "1")
 
 --# xdg
 hl.env("XDG_CURRENT_DESKTOP", "Hyprland")
