@@ -62,7 +62,7 @@ elif tool in ('Write', 'Edit'):
     desc = ('write to ' if tool == 'Write' else 'edit ') + name
 else:
     desc = 'use ' + tool
-print(desc)
+print(desc[0].lower() + desc[1:] if desc else desc)
 " 2>/dev/null)
     body="${ATTENTION_MESSAGES[$idx]} $desc"
     notify-send -u normal "Claude Mail$exclamations" "$body" -i "$(iconHappy)"
