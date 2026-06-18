@@ -55,7 +55,16 @@ if [[ -n "$session_id" ]]; then
     transcript=$(find ~/.claude/projects -name "${session_id}.jsonl" 2>/dev/null | head -1)
     if [[ -n "$transcript" ]]; then
         preview=$(python3 - "$transcript" <<'EOF'
-import sys, json
+import sys, json, re
+def strip_md(text):
+    text = re.sub(r'\*\*(.+?)\*\*', r'\1', text)
+    text = re.sub(r'\*(.+?)\*', r'\1', text)
+    text = re.sub(r'__(.+?)__', r'\1', text)
+    text = re.sub(r'_(.+?)_', r'\1', text)
+    text = re.sub(r'`(.+?)`', r'\1', text)
+    text = re.sub(r'\[(.+?)\]\(.+?\)', r'\1', text)
+    text = re.sub(r'^#{1,6}\s+', '', text, flags=re.MULTILINE)
+    return text
 transcript = open(sys.argv[1]).readlines()
 for line in reversed(transcript):
     try:
@@ -64,7 +73,7 @@ for line in reversed(transcript):
         if msg.get('role') == 'assistant':
             for block in msg.get('content', []):
                 if block.get('type') == 'text':
-                    text = block['text'].strip()
+                    text = strip_md(block['text']).strip()
                     if text:
                         print(text[:25] + ('..' if len(text) > 25 else ''))
                         sys.exit(0)
