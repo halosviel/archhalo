@@ -18,7 +18,7 @@ import Wp from "gi://AstalWp"
 
 
 // ----------------------
-// VARS
+// CONFIG
 // ----------------------
 
 // left
