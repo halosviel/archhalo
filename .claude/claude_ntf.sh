@@ -6,6 +6,7 @@ REPLY_MESSAGES=(
     "Claude-chan responded:"
     "New message from Claude-chan:"
     "Unread message from Claude-chan:"
+    "Claude-chan dropped a message:"
 )
 
 COMPLETED_MESSAGES="Claude-chan completed a task:"
