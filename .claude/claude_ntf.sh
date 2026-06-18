@@ -75,7 +75,12 @@ for line in reversed(transcript):
                 if block.get('type') == 'text':
                     text = strip_md(block['text']).strip()
                     if text:
-                        print(text[:25] + ('..' if len(text) > 25 else ''))
+                        first = text.split('\n')[0].rstrip()
+                        if len(first) > 25:
+                            end = 25 + re.search(r'\S*', first[25:]).end()
+                            print(first[:end].rstrip() + '..')
+                        else:
+                            print(first + ('..' if '\n' in text else ''))
                         sys.exit(0)
     except Exception:
         pass
