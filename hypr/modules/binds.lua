@@ -27,6 +27,7 @@ hl.bind("SUPER + F", function()
 end)
 
 
+
 --# ───────────────────────────
 --# peripherals
 --# ───────────────────────────
@@ -113,6 +114,10 @@ end)
 --# ───────────────────────────
 --# scripts
 --# ───────────────────────────
+
+hl.bind("SUPER + E", function()
+	hl.dispatch(hl.dsp.exec_cmd("bash ~/.config/hypr/scripts/emoji_toggle.sh"))
+end)
 
 hl.bind("SUPER + S", function()
 	hl.dispatch(hl.dsp.exec_cmd("bash ~/.config/hypr/scripts/screenshot.sh"))
