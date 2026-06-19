@@ -179,6 +179,20 @@ hl.window_rule({
 	workspace = 2
 })
 
+hl.window_rule({
+  match = {
+    class = "it.mijorus.smile"
+  },
+	float = true,
+	move = { 800, 664 },
+	size = { 320, 420 },
+	center = true,
+	no_initial_focus = true,
+	animation = "slide bottom",
+	pin = true,
+	opacity = 0.8,
+})
+
 
 --# ───────────────────────────
 --# popups
