@@ -183,14 +183,13 @@ hl.window_rule({
   match = {
     class = "it.mijorus.smile"
   },
-	float = true,
-	move = { 800, 664 },
-	size = { 320, 420 },
-	center = true,
-	no_initial_focus = true,
-	animation = "slide bottom",
-	pin = true,
-	opacity = 0.8,
+  float = true,
+  move = { 800, 664 },
+  size = { 320, 420 },
+  no_initial_focus = false, -- may change, still testing
+  animation = "slide bottom",
+  pin = true,
+  opacity = "0.8",
 })
 
 
@@ -214,7 +213,6 @@ hl.window_rule({
 	opaque = true,
 	rounding = 12
 })
-
 
 --# video source picker
 hl.window_rule({
