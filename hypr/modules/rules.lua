@@ -205,11 +205,11 @@ hl.window_rule({
 	no_initial_focus = true,
   float = true,
 	keep_aspect_ratio = true,
-	pin = true,	
+	pin = true,
 	border_size = 0,
 	animation = "slide",
 	--size = { 351, 198 },
-	move = { -6, 500 },		
+	move = { -6, 500 },
 	opaque = true,
 	rounding = 12
 })

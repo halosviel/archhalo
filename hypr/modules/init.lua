@@ -28,8 +28,10 @@ hl.on("hyprland.start", function()
 	--# daemons
 	--# ───────────────────────────
 
-	hl.exec_cmd("bash ~/.config/hypr/scripts/cpu_temp_ntf.sh")
-	hl.exec_cmd("bash ~/.config/hypr/scripts/memory_ntf.sh")
+	hl.exec_cmd("bash ~/.config/hypr/daemons/bluetooth_ntf.sh")
+	hl.exec_cmd("bash ~/.config/hypr/daemons/cpu_temp_ntf.sh")
+	hl.exec_cmd("bash ~/.config/hypr/daemons/memory_ntf.sh")
+	hl.exec_cmd("bash ~/.config/hypr/daemons/network_ntf.sh")
 
 
 	--# ───────────────────────────
