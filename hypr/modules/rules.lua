@@ -208,7 +208,7 @@ hl.window_rule({
 	pin = true,	
 	border_size = 0,
 	animation = "slide",
-	size = { 351, 198 },
+	--size = { 351, 198 },
 	move = { -6, 500 },		
 	opaque = true,
 	rounding = 12
