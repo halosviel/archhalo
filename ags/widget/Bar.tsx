@@ -35,7 +35,7 @@ const WORKSPACE_CHARS = ["一", "二", "三", "四", "五", "六", "七", "八"]
 const TIME_FORMAT = "date '+ %p %-I:%M • %S'" // see man date cmd!!
 const DATE_FORMAT = "date '+󰸗 %a • %B %d'"
 
-const GIF_PATH = "/home/halosviel/Local/Rice/Gifs/tohru.gif"
+const GIF_PATH = "/home/halosviel/Local/Rice/Gifs/miku.gif"
 const GIF_SIZE = 30
 
 // right
@@ -183,7 +183,7 @@ function Gif() {
 
   let image = new Gtk.Image()
   image.pixelSize = GIF_SIZE
-  //image.cssClasses = ["center-gif"]
+  image.cssClasses = ["center-gif"]
 
   try {
     animation = GdkPixbuf.PixbufAnimation.new_from_file(GIF_PATH)
