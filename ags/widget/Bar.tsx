@@ -183,7 +183,7 @@ function Gif() {
 
   let image = new Gtk.Image()
   image.pixelSize = GIF_SIZE
-  image.cssClasses = ["center-gif"]
+  //image.cssClasses = ["center-gif"]
 
   try {
     animation = GdkPixbuf.PixbufAnimation.new_from_file(GIF_PATH)
