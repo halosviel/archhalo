@@ -6,7 +6,7 @@ TEMP_PATH="/sys/class/hwmon/hwmon1/temp1_input"
 SOUND="/home/halosviel/Local/Rice/Sounds/exclamation.mp3"
 NTF_LIFETIME=5000
 
-THRESHOLDS=(70 80 90)
+THRESHOLDS=(80 90)
 
 # -->
 
