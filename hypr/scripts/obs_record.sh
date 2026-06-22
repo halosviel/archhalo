@@ -7,7 +7,7 @@ NTF_DONE_SOUND="/home/halosviel/Local/Rice/Sounds/pop-up-blocked.mp3"
 NTF_FAIL_LIFETIME=6000
 NTF_FAIL_SOUND="/home/halosviel/Local/Rice/Sounds/error.mp3"
 
-SAVE_TIMEOUT=5000
+SAVE_TIMEOUT=10000
 SAVE_YIELD_INTERVAL=0.1
 
 # -->
@@ -46,8 +46,7 @@ if echo "$obsStatus" | grep -qi "Active: true"; then
     now=$(date +%s%3N)
 		if (( now - start_time >= SAVE_TIMEOUT )); then
 			paplay --volume=32768 $NTF_FAIL_SOUND &
-			notify-send "Recording failed to save$exclamations" "Execution timed out" -i "$(iconSad)" -t $NTF_FAIL_LIFETIME
-			exit 1
+			notify-send "Saving a large file$exclamations" "The recording is taking a while to save!" -i "$(iconSad)" -t $NTF_FAIL_LIFETIME
     fi
 
     last_size=$size
