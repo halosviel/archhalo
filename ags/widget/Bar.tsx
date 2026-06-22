@@ -318,10 +318,10 @@ function CpuTemperature() {
 
   const getIcon = (num: number) => {
     if (isNaN(num)) return ""
-    if (num < 50) return ""
-    if (num < 75) return ""
-    if (num < 100) return ""
-    return ""
+    if (num < 50) return "󰔏"
+    if (num < 75) return "󰔐"
+    if (num < 100) return "󰔑"
+    return "󰔑"
   }
 
   const label = new Gtk.Label()
