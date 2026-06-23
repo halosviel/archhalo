@@ -38,5 +38,5 @@ hl.on("hyprland.start", function()
 	--# other
 	--# ───────────────────────────
 
-	hl.exec_cmd("wl-clip-persist --clipboard regular")
+	-- hl.exec_cmd("wl-clip-persist --clipboard regular")
 end)
