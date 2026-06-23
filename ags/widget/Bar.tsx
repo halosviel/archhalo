@@ -364,7 +364,7 @@ function NetworkSpeed() {
 
       const down = ((rx - prev.rx) / 1024 / 1024 * 8 * 10).toFixed(1)
       const up = ((tx - prev.tx) / 1024 / 1024 * 8 * 10).toFixed(1)
-      if (prev.rx !== 0) label.label = `󰓅  󰇚 ${down}Mbp/s 󰕒 ${up}Mbp/s`
+      if (prev.rx !== 0) label.label = `󰓅 󰇚 ${down}Mbp/s 󰕒 ${up}Mbp/s`
       prev = { rx, tx }
     } catch {
       label.label = "󰓅 ERR"

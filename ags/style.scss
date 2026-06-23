@@ -37,7 +37,7 @@ window.Bar {
     border-radius: 60px;
     padding: 4px;
     min-width: 20px;
-    color: rgba(232, 185, 149, 0.4);
+    color: rgba(232, 185, 149, 0.6);
   }
 
   .ws-btn.occupied {
@@ -45,7 +45,7 @@ window.Bar {
   }
 
   .ws-btn.active {
-    color: rgba(242, 242, 242, 0.8);
+    color: rgba(242, 242, 242);
   }
 
   .rec-indicator {
