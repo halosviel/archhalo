@@ -197,6 +197,16 @@ hl.window_rule({
 --# popups
 --# ───────────────────────────
 
+--# save image
+hl.window_rule({
+  match = {
+    class = "xdg-desktop-portal-gtk"
+  },
+  float = true,
+	center = true,
+	size = { 700, 500 }
+})
+
 --# picture-in-picture
 hl.window_rule({
   match = {
@@ -209,7 +219,6 @@ hl.window_rule({
 	border_size = 0,
 	animation = "slide",
 	move = { -6, 450 },
-	opaque = true,
 	rounding = 12
 })
 
@@ -220,6 +229,7 @@ hl.window_rule({
   },
   float = true,
 	center = true,
+	opaque = true,
 	size = { 500, 300 }
 })
 
