@@ -109,6 +109,10 @@ hl.bind("SUPER + L", function()
 	hl.dispatch(hl.dsp.exec_cmd("com.sidevesh.Luminance"))
 end)
 
+hl.bind("SUPER + O", function()
+	hl.dispatch(hl.dsp.exec_cmd("kitty --title floating claude"))
+end)
+
 
 
 --# ───────────────────────────
