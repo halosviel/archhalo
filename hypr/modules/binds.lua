@@ -26,6 +26,11 @@ hl.bind("SUPER + F", function()
 	hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
 end)
 
+--# pin window
+hl.bind("SUPER + P", function()
+	hl.dispatch(hl.dsp.window.pin())
+end)
+
 
 
 --# ───────────────────────────
