@@ -9,13 +9,13 @@ declare -A TITLES
 declare -A MESSAGES
 declare -A SOUNDS
 
-TITLES[90]="High memory usage"
-MESSAGES[90]="%d%% of ram being used"
-SOUNDS[90]="/home/halosviel/Local/Rice/Sounds/exclamation.mp3"
+TITLES[95]="High memory usage"
+MESSAGES[95]="%d%% of ram being used. Close some apps!"
+SOUNDS[95]="/home/halosviel/Local/Rice/Sounds/exclamation.mp3"
 
-TITLES[98]="High memory usage"
-MESSAGES[98]="%d%% of ram being used\nSystem may shut down soon!"
-SOUNDS[98]="/home/halosviel/Local/Rice/Sounds/error.mp3"
+TITLES[99]="High memory usage"
+MESSAGES[99]="%d%% of ram being used.\nits lowk over bro 🥀"
+SOUNDS[99]="/home/halosviel/Local/Rice/Sounds/error.mp3"
 
 # -->
 
