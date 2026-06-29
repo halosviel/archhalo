@@ -58,6 +58,9 @@ if echo "$obsStatus" | grep -qi "Active: true"; then
 	mv "$recording" "$newName"
 	recording="$newName"
 
+	# copy file to clipboard
+	wl-copy --type text/uri-list <<< "file://$recording"
+
 	# play done sound
 	paplay --volume=32768 $NTF_DONE_SOUND &
   
