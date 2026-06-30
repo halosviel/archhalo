@@ -45,7 +45,6 @@ hl.config({
 		disable_splash_rendering = true,
 		vrr = 0,
 		middle_click_paste = false,
-  	exit_window_retains_fullscreen = true
 	},
 })
 
