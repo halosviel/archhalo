@@ -29,7 +29,10 @@ if echo "$obsStatus" | grep -qi "Active: true"; then
   obs-cmd --websocket obsws://localhost:4455/slg20Z55ZmFTHX8G recording stop
   sleep 1  # wait for file to be written
 
-  recording=$(ls -t /home/halosviel/Captures/*.mp4 2>/dev/null | head -1)
+  # grab the newest *raw* recording only — exclude replay/clip/already-renamed
+  # files so a simultaneous clip save can't make us latch onto the wrong file
+  recording=$(ls -t /home/halosviel/Captures/*.mp4 2>/dev/null \
+    | grep -vE '/(Replay|clip_|recording_)[^/]*\.mp4$' | head -1)
 	exclamations=$(printf '%.0s!' $(seq 1 $((RANDOM % 3 + 1))))
 
 	last_size=0
@@ -47,6 +50,7 @@ if echo "$obsStatus" | grep -qi "Active: true"; then
 		if (( now - start_time >= SAVE_TIMEOUT )); then
 			paplay --volume=32768 $NTF_FAIL_SOUND &
 			notify-send "Saving a large file$exclamations" "The recording is taking a while to save!" -i "$(iconSad)" -t $NTF_FAIL_LIFETIME
+			break
     fi
 
     last_size=$size
