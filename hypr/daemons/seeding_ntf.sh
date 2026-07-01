@@ -2,8 +2,8 @@
 
 # [CONFIG]
 CHECK_INTERVAL=5
-NTF_LIFETIME=800000
-MISS_GRACE=2            # a seeder must be missing this many polls before "left"
+NTF_LIFETIME=8000
+MISS_GRACE=2 # a seeder must be missing this many polls before "left"
 SEANIME_DB="$HOME/.config/Seanime/seanime.db"
 START_SOUND="/home/halosviel/Local/Rice/Sounds/notify.mp3"
 STOP_SOUND="/home/halosviel/Local/Rice/Sounds/information-bar.mp3"
@@ -15,7 +15,7 @@ happy_icon() {
 }
 
 sad_icon() {
-	ls /home/halosviel/Local/Rice/Icons/Sad/*.png   | shuf -n 1;
+	ls /home/halosviel/Local/Rice/Icons/Sad/*.png | shuf -n 1;
 }
 
 active_seeders() {
@@ -97,7 +97,7 @@ notify_stop() {
   body=$(printf 'Seeder left%s\n󱧑 ip: %s\n󰷝 %s' "$exclamations" "$ip" "$name")
 
   if [ "${DRY_RUN:-0}" = "1" ]; then
-		echo "STOP  :: $body"; return;
+		echo "STOP :: $body"; return;
 	fi
 
   notify-send "Seanime" "$body" -t "$NTF_LIFETIME" -i "$(sad_icon)"
