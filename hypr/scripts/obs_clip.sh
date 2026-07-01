@@ -10,7 +10,7 @@ NTF_FAIL_LIFETIME=6000
 NTF_FAIL_SOUND="/home/halosviel/Local/Rice/Sounds/error.mp3"
 
 YIELD_INTERVAL=100
-YIELD_TIMEOUT=5000
+YIELD_TIMEOUT=15000
 
 # -->
 
@@ -28,7 +28,7 @@ getClip() {
 
 # -->
 
-obs-cmd --websocket "$WEB_SOCKET" trigger-hotkey ReplayBuffer.Save
+obs-cmd --websocket "$WEB_SOCKET" replay save
 exclamations="!"
 
 previousClip=$(getClip)
@@ -52,7 +52,7 @@ fi
 
 # wait until file is done being written
 elapsed=0
-while { [ ! -f "$clip" ] || lsof "$clip" >/dev/null 2>&1; } && [ "$elapsed" -lt "$TIMEOUT" ]; do
+while { [ ! -f "$clip" ] || lsof "$clip" >/dev/null 2>&1; } && [ "$elapsed" -lt "$YIELD_TIMEOUT" ]; do
 	sleep "$(awk "BEGIN {print $YIELD_INTERVAL/1000}")"
   elapsed=$((elapsed + YIELD_INTERVAL))
 done
