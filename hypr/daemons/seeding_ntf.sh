@@ -1,116 +1,158 @@
 #!/bin/bash
 
-# seeding_ntf.sh
-# Notifies (via mako) when someone STARTS or STOPS downloading from you --
-# i.e. active leechers pulling data from your qBittorrent seeds. Polls the
-# qBittorrent WebUI API and watches the count of peers we're uploading to.
-# The WebUI credentials are read from Seanime's settings DB at runtime, so no
-# password is ever stored in this file (it lives in a public config repo).
-
 # [CONFIG]
 CHECK_INTERVAL=5
-NTF_LIFETIME=8000
+NTF_LIFETIME=800000
+MISS_GRACE=2            # a seeder must be missing this many polls before "left"
 SEANIME_DB="$HOME/.config/Seanime/seanime.db"
 START_SOUND="/home/halosviel/Local/Rice/Sounds/notify.mp3"
 STOP_SOUND="/home/halosviel/Local/Rice/Sounds/information-bar.mp3"
-COOKIE="/tmp/seeding_ntf.cookie"
 
 # -->
 
-happy_icon() { ls /home/halosviel/Local/Rice/Icons/Happy/*.png | shuf -n 1; }
-sad_icon()   { ls /home/halosviel/Local/Rice/Icons/Sad/*.png   | shuf -n 1; }
-
-excl() { printf '%.0s!' $(seq 1 $((RANDOM % 3 + 1))); }
-
-human_speed() {
-  local b=${1:-0}
-  if   [ "$b" -ge 1048576 ]; then awk "BEGIN{printf \"%.1f MB/s\", $b/1048576}"
-  elif [ "$b" -ge 1024 ];    then awk "BEGIN{printf \"%.0f KB/s\", $b/1024}"
-  else echo "${b} B/s"; fi
+happy_icon() {
+	ls /home/halosviel/Local/Rice/Icons/Happy/*.png | shuf -n 1;
 }
 
-# Pull qBittorrent WebUI host/port/creds straight from Seanime (read-only), so
-# the secret never has to live in this script.
-load_creds() {
-  QB_HOST=$(sqlite3 -readonly "$SEANIME_DB" "SELECT qbittorrent_host FROM settings LIMIT 1;" 2>/dev/null)
-  QB_PORT=$(sqlite3 -readonly "$SEANIME_DB" "SELECT qbittorrent_port FROM settings LIMIT 1;" 2>/dev/null)
-  QB_USER=$(sqlite3 -readonly "$SEANIME_DB" "SELECT qbittorrent_username FROM settings LIMIT 1;" 2>/dev/null)
-  QB_PASS=$(sqlite3 -readonly "$SEANIME_DB" "SELECT qbittorrent_password FROM settings LIMIT 1;" 2>/dev/null)
-  [ -z "$QB_HOST" ] && QB_HOST="127.0.0.1"
-  [ -z "$QB_PORT" ] && QB_PORT="8081"
-  QB="http://$QB_HOST:$QB_PORT"
+sad_icon() {
+	ls /home/halosviel/Local/Rice/Icons/Sad/*.png   | shuf -n 1;
 }
 
-# Log in to the WebUI, saving the session cookie. Non-zero if qbit is down.
-qb_login() {
-  local code
-  code=$(curl -s -m 5 -o /dev/null -w '%{http_code}' -c "$COOKIE" \
-    --data-urlencode "username=$QB_USER" --data-urlencode "password=$QB_PASS" \
-    "$QB/api/v2/auth/login" 2>/dev/null)
-  [ "$code" = "200" ] || [ "$code" = "204" ]
+active_seeders() {
+  python3 - <<'PY' 2>/dev/null || echo DOWN
+import os, sys, json, sqlite3, urllib.request, urllib.parse, http.cookiejar
+
+db = os.path.expanduser("~/.config/Seanime/seanime.db")
+def setting(col):
+    try:
+        con = sqlite3.connect("file:%s?mode=ro" % db, uri=True)
+        row = con.execute("SELECT %s FROM settings LIMIT 1" % col).fetchone()
+        con.close()
+        return (row[0] if row else "") or ""
+    except Exception:
+        return ""
+
+host = setting("qbittorrent_host") or "127.0.0.1"
+port = setting("qbittorrent_port") or "8081"
+qb   = "http://%s:%s" % (host, port)
+
+cj = http.cookiejar.CookieJar()
+opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+def api(path, data=None):
+    req = urllib.request.Request(qb + path, data=data, headers={"Referer": qb})
+    return opener.open(req, timeout=5)
+
+try:
+    api("/api/v2/auth/login", urllib.parse.urlencode(
+        {"username": setting("qbittorrent_username"),
+         "password": setting("qbittorrent_password")}).encode()).read()
+    torrents = json.load(api("/api/v2/torrents/info"))
+except Exception:
+    print("DOWN"); sys.exit(0)
+
+out = []
+for t in torrents:
+    h, name = t.get("hash", ""), (t.get("name") or "?")
+    try:
+        peers = json.load(api("/api/v2/sync/torrentPeers?hash=%s&rid=0" % h)).get("peers", {})
+    except Exception:
+        continue
+    for pid, p in peers.items():
+        if "U" in (p.get("flags", "") or "").split() or (p.get("up_speed") or 0) > 0:
+            ip      = p.get("ip", "?")
+            client  = (p.get("client") or "?").strip() or "?"
+            country = (p.get("country") or p.get("country_code") or "").strip()
+            key     = h[:12] + "|" + pid
+            out.append("\t".join([key, ip, client, country, name]))
+if out:
+    print("\n".join(out))
+PY
 }
 
-# Echo the number of peers currently downloading FROM us (up_speed > 0) across
-# all torrents, or "DOWN" when the WebUI can't be reached / auth is lost.
-count_leechers() {
-  local hashes n total=0
-  hashes=$(curl -s -m 5 -b "$COOKIE" "$QB/api/v2/torrents/info" 2>/dev/null \
-    | python3 -c 'import sys,json;[print(t["hash"]) for t in json.load(sys.stdin)]' 2>/dev/null)
+# seeder joined
+notify_start() {
+  local ip client country name loc body
+  IFS=$'\t' read -r ip client country name <<< "$1"
 
-  # No/!JSON answer -> session may have expired; re-login once and retry.
-  if [ -z "$hashes" ]; then
-    qb_login || { echo DOWN; return; }
-    hashes=$(curl -s -m 5 -b "$COOKIE" "$QB/api/v2/torrents/info" 2>/dev/null \
-      | python3 -c 'import sys,json;[print(t["hash"]) for t in json.load(sys.stdin)]' 2>/dev/null)
-    [ -z "$hashes" ] && { curl -s -m 3 -o /dev/null "$QB" || { echo DOWN; return; }; echo 0; return; }
+  loc=""; [ -n "$country" ] && loc="$country"
+  name=${name:0:70}
+	exclamations=$(printf '%.0s!' $(seq 1 $((RANDOM % 3 + 1))))
+  body=$(printf 'A seeder has joined%s\n󱧑 ip: %s\n %s\n󰷝 %s' "$exclamations" "$ip" "$loc" "$name")
+
+  if [ "${DRY_RUN:-0}" = "1" ]; then
+		echo "START :: $body"; return;
+	fi
+
+  notify-send "Seanime" "$body" -t "$NTF_LIFETIME" -i "$(happy_icon)"
+  paplay --volume=32768 "$START_SOUND" &
+}
+
+# seeder left
+notify_stop() {
+  local ip client country name body
+  IFS=$'\t' read -r ip client country name <<< "$1"
+
+  name=${name:0:70}
+	exclamations=$(printf '%.0s!' $(seq 1 $((RANDOM % 3 + 1))))
+  body=$(printf 'Seeder left%s\n󱧑 ip: %s\n󰷝 %s' "$exclamations" "$ip" "$name")
+
+  if [ "${DRY_RUN:-0}" = "1" ]; then
+		echo "STOP  :: $body"; return;
+	fi
+
+  notify-send "Seanime" "$body" -t "$NTF_LIFETIME" -i "$(sad_icon)"
+  paplay --volume=32768 "$STOP_SOUND" &
+}
+
+declare -A seen
+declare -A miss
+first=1
+
+process() {
+  local lines=("$@") ln key rest
+  # WebUI unreachable (e.g. Seanime/qbit closed) -> forget everyone, no noise.
+  if [ "${lines[0]:-}" = "DOWN" ]; then
+    seen=(); miss=(); return
   fi
 
-  for h in $hashes; do
-    n=$(curl -s -m 5 -b "$COOKIE" "$QB/api/v2/sync/torrentPeers?hash=$h&rid=0" 2>/dev/null \
-      | python3 -c 'import sys,json;d=json.load(sys.stdin);print(sum(1 for p in d.get("peers",{}).values() if p.get("up_speed",0)>0))' 2>/dev/null)
-    total=$(( total + ${n:-0} ))
+  local -A cur=()
+  for ln in "${lines[@]}"; do
+    [ -z "$ln" ] && continue
+    key=${ln%%$'\t'*}; rest=${ln#*$'\t'}
+    cur[$key]=$rest
   done
-  echo "$total"
+
+  # Arrivals (and refresh of the known ones).
+  for key in "${!cur[@]}"; do
+    if [ -z "${seen[$key]+x}" ] && [ "$first" -eq 0 ]; then
+      notify_start "${cur[$key]}"
+    fi
+    seen[$key]=${cur[$key]}
+    miss[$key]=0
+  done
+
+  # Departures, with a grace period so a momentary blip doesn't flap.
+  for key in "${!seen[@]}"; do
+    if [ -z "${cur[$key]+x}" ]; then
+      miss[$key]=$(( ${miss[$key]:-0} + 1 ))
+      if [ "${miss[$key]}" -ge "$MISS_GRACE" ]; then
+        [ "$first" -eq 0 ] && notify_stop "${seen[$key]}"
+        unset 'seen[$key]' 'miss[$key]'
+      fi
+    fi
+  done
 }
 
-# Current total upload speed (bytes/s), for the notification body.
-up_speed() {
-  curl -s -m 5 -b "$COOKIE" "$QB/api/v2/transfer/info" 2>/dev/null \
-    | python3 -c 'import sys,json;print(json.load(sys.stdin).get("up_info_speed",0))' 2>/dev/null
+main() {
+  local lines
+  while true; do
+    mapfile -t lines < <(active_seeders)
+    process "${lines[@]}"
+    first=0                # after the first poll, pre-existing seeders are baselined
+    sleep "$CHECK_INTERVAL"
+  done
 }
 
-# -->
-
-load_creds
-qb_login
-
-# Silent baseline: don't fire for peers that were already leeching at startup;
-# only react to changes from here on (same as the other _ntf daemons).
-prev=$(count_leechers)
-[ "$prev" = "DOWN" ] && prev=0
-
-while true; do
-  sleep "$CHECK_INTERVAL"
-  now=$(count_leechers)
-
-  # qbit went away (e.g. Seanime closed) -> reset quietly, no notification.
-  if [ "$now" = "DOWN" ]; then
-    prev=0
-    continue
-  fi
-
-  if [ "$prev" -eq 0 ] && [ "$now" -gt 0 ]; then
-    peers=$now; [ "$peers" -eq 1 ] && who="someone" || who="$peers people"
-    notify-send "Someone's leeching from you$(excl)" \
-      "$who pulling your anime 📥  (↑ $(human_speed "$(up_speed)"))" \
-      -t "$NTF_LIFETIME" -i "$(happy_icon)"
-    paplay --volume=32768 "$START_SOUND" &
-  elif [ "$prev" -gt 0 ] && [ "$now" -eq 0 ]; then
-    notify-send "Seeding went quiet" \
-      "nobody's downloading from you right now 🥀" \
-      -t "$NTF_LIFETIME" -i "$(sad_icon)"
-    paplay --volume=32768 "$STOP_SOUND" &
-  fi
-
-  prev=$now
-done
+# --probe: print current seeders once (debug). Otherwise run, unless sourced for tests.
+if [ "${1:-}" = "--probe" ]; then active_seeders; exit 0; fi
+[ "${SEEDING_TEST:-0}" = "1" ] || main

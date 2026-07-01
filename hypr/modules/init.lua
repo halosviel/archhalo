@@ -32,6 +32,8 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("bash ~/.config/hypr/daemons/cpu_temp_ntf.sh")
 	hl.exec_cmd("bash ~/.config/hypr/daemons/memory_ntf.sh")
 	hl.exec_cmd("bash ~/.config/hypr/daemons/network_ntf.sh")
+	hl.exec_cmd("bash ~/.config/hypr/daemons/seeding_ntf.sh")
+	hl.exec_cmd("bash ~/.config/hypr/daemons/qbit_seanime.sh")
 
 
 	--# ───────────────────────────
